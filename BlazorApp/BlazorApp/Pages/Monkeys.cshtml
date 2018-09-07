@@ -1,0 +1,55 @@
+﻿@page "/monkeys"
+@inject HttpClient Http
+
+<h1>Monkeys</h1>
+
+<p>This component demonstrates fetching json data from the server.</p>
+
+@if (monkeys == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Details</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var monkey in monkeys)
+            {
+                <tr>
+                    <td>@monkey.Name</td>
+                    <td>@monkey.Location</td>
+                    <td>@monkey.Details</td>
+                    <td><img src=@monkey.Image class="img-fluid rounded" alt="Responsive image"></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@functions {
+    Monkey[] monkeys;
+
+    protected override async Task OnInitAsync()
+    {
+        monkeys = await Http.GetJsonAsync<Monkey[]>("https://raw.githubusercontent.com/jamesmontemagno/app-monkeys/master/MonkeysApp/monkeydata.json");
+    }
+
+    class Monkey
+    {
+        public string Name { get; set; }
+        public string Location { get; set; }
+        public string Details { get; set; }
+        public string Image { get; set; }
+        public int Population { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+    }
+}
